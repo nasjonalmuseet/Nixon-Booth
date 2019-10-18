@@ -1,0 +1,322 @@
+/* CSS Document */
+
+html {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	height:100%;
+	}
+	
+/* FONTS */
+@font-face {
+	font-family: 'icomoon';
+	src:url('fonts/icomoon.eot');
+	src:url('fonts/icomoon.eot?#iefix') format('embedded-opentype'),
+		url('fonts/icomoon.woff') format('woff'),
+		url('fonts/icomoon.ttf') format('truetype'),
+		url('fonts/icomoon.svg#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* Use the following CSS code if you want to use data attributes for inserting your icons */
+[data-icon]:before {
+	font-family: 'icomoon';
+	content: attr(data-icon);
+	speak: none;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Use the following CSS code if you want to have a class per icon */
+/*
+Instead of a list of all class selectors,
+you can use the generic selector below, but it's slower:
+[class*="icon-"] {
+*/
+.icon-home, .icon-camera, .icon-spinner, .icon-google-plus, .icon-facebook, .icon-instagram, .icon-twitter, .icon-mail, .icon-mail-2, .icon-pinterest, .icon-checkmark {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	font-size:3.5em;
+}
+.icon-home:before {
+	content: "\e001";
+}
+.icon-camera:before {
+	content: "\e002";
+}
+.icon-spinner:before {
+	content: "\e000";
+}
+.icon-google-plus:before {
+	content: "\e004";
+}
+.icon-facebook:before {
+	content: "\e005";
+}
+.icon-instagram:before {
+	content: "\e003";
+}
+.icon-twitter:before {
+	content: "\e006";
+}
+.icon-mail:before {
+	content: "\e007";
+}
+.icon-mail-2:before {
+	content: "\e008";
+}
+.icon-pinterest:before {
+	content: "\e009";
+}
+.icon-checkmark:before {
+	content: "\e00a";
+}
+
+#controls {
+  position:relative;
+  list-style: none;
+  text-align: center;
+  background-color:#666;
+  margin:0 0 0 0;
+  padding:0 25px 0 0;
+  display:block;
+  height:505px;
+}
+
+#controls li {
+  position: relative;
+  list-style:none;
+  margin:0 0 0 0;
+  padding:2px;
+  margin:20px 0 30px 30px;
+  display: inline-block;
+  margin-right: -2px;
+  color:#fff;
+  background-color: #666;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#999), to(#333));
+  background-image: -webkit-linear-gradient(top, #999, #333); 
+  background-image: -moz-linear-gradient(top, #999, #333); 
+  background-image: -ms-linear-gradient(top, #999, #333); 
+  background-image: -o-linear-gradient(top, #999, #333); 
+  border-radius: 50%;
+  box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
+}
+
+#controls a {
+  position:relative;
+  display: block;
+  background-color: #888;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#777), to(#222));
+  background-image: -webkit-linear-gradient(top, #777, #222); 
+  background-image: -moz-linear-gradient(top, #777, #222); 
+  background-image: -ms-linear-gradient(top, #777, #222); 
+  background-image: -o-linear-gradient(top, #777, #222); 
+  color: #ccc;
+  margin: 2px;
+  width: 100px;
+  height: 100x;
+  position: relative;
+  text-align: center;
+  line-height: 100px;
+  border-radius: 50%;
+  box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
+  text-decoration:none;
+  opacity:.3;
+  cursor:default;
+}
+
+	#controls a.active {
+	  background-image: -webkit-linear-gradient(top, #f65670, #b91327);
+	  opacity:1;
+	  cursor:pointer;
+	}
+		#controls a.active:hover, #controls a.active:active {
+	  background-image: -webkit-linear-gradient(top, #d63f52, #890d15);
+	}
+	
+	#controls a.active2 {
+	  background-image: -webkit-linear-gradient(top, #7bdf3f, #489411);
+	  opacity:1;
+	  cursor:pointer;
+	}
+		#controls a.active2:hover, 
+		#controls a.active2:active {
+	  background-image: -webkit-linear-gradient(top, #5fac2d, #2f6a0b);
+	}
+
+.noise {
+	position: relative;
+	z-index: 1;
+	}
+		
+.noise:before, .body-noise:before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	background-image: url(data:image/png;base64,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);
+
+	}
+
+/****************************/
+	
+body {background:#333;margin:0;padding:0;height:100%;}
+
+a {color:#fff;-webkit-tap-highlight-color: rgba(0,0,0,0);}
+a:hover {color:#f30;-webkit-tap-highlight-color: rgba(0,0,0,0);}
+	
+video {
+	-webkit-filter: grayscale(1);
+    filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+, Firefox on Android */
+	position:absolute;
+	-moz-transform: scaleX(-1);
+	-o-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+	filter: FlipH;
+	-ms-filter: "FlipH";
+}
+
+#blitz { 
+    position:fixed; 
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+	z-index:100;
+	background:url(../media/nixon-ghost-720.jpg) no-repeat top center #fff;
+	background-position:center top;
+}
+
+#wrapper {
+	position:relative;
+	margin: 0 auto 0 auto;
+	min-width:720px;
+	max-width:720px;
+	overflow:hidden;
+}
+
+#videoWrapper  {
+	position:relative;
+	display:block;
+	width:100%;
+	height:auto;
+	text-align:center;
+}
+
+#videoWrapper video {
+	position:relative;
+	display:block;
+	height:720px;
+	left:-280px;
+}
+
+#videoOverlay {
+	position:absolute;
+	display:block;
+	left:0px;
+	top:0px;
+	z-index:50;
+	width:100%;
+	height:100%;
+	opacity:.6;
+	-moz-transform: scaleX(-1);
+	-o-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+	filter: FlipH;
+	-ms-filter: "FlipH";
+}
+
+#videoOverlay img {
+	width:100%;
+	height:100%;
+}
+
+#fullscreenToggle {
+	position:absolute;
+	display:block;
+	top:0px;
+	right:0px;
+	width:80px;
+	height:80px;
+	z-index:1000;
+}
+
+#canvas {
+	position:relative;
+	display:block;
+	height:auto;
+	z-index:55;
+}
+
+#nxnSender {
+	position:absolute;
+	top:640px;
+	width:520px;
+	left:100px;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	border:none;
+	z-index:100;
+}
+
+#nxnAddress {
+	position:relative;
+	float:left;
+	border-radius: 20px;
+	width:450px;
+	height:50px;
+	margin:5px 0 0 0;
+	padding:0 0 0 0;
+	background:#fff;
+	font-size:1.8em;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color:#111;
+	text-align:center;
+	border:none;
+	outline:none;
+}
+
+	#nxnAddress:focus {
+		border:none;
+		outline:none;
+		}
+	#nxnAddress:focus::-webkit-input-placeholder {
+		color: transparent;
+		}
+		
+#emailNxn {
+	position:relative;
+	float:right;
+	display:block;
+	width:70px;
+	height:60px;
+	background:none;
+	border:none;
+	color:#fff;
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	font-size:3em;
+	padding:0 0 0 0;
+	margin:0 0 0 0;
+	-webkit-font-smoothing: antialiased;
+}

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<head>
+<title>NIXON BOOTH</title>
+<meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width,user-scalable=no" />
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="shortcut icon" sizes="196x196" href="icon.png">
+<link href="css/nixon.css" rel="stylesheet" type="text/css" media="screen">
+</head>
+<body>
+<div id="wrapper">
+  <div id="blitz"></div>
+  <div id="videoWrapper">
+    <div id="videoOverlay"><img src="media/nixon-coffee-720.png" /></div>
+    <div id="fullscreenToggle"></div>
+    <audio id="buzzer" src="../nxnaudio/buzzer.mp3"></audio> 
+    <audio id="shutter" src="../nxnaudio/shutter2.mp3"></audio> 
+    <video id="video" autoplay></video> 
+   </div> 
+   <canvas id='canvas'></canvas>
+   <ul id="controls" class="noise">
+      <li><a id="capture" class="icon-camera active"></a>
+      <a id="captureOff" class="icon-camera"></a></li>
+      <li><a id="confirm" class="icon-checkmark active2"></a>
+      <a id="confirmOff" class="icon-checkmark"></a></li>
+      <li><a id="redo" class="icon-spinner active"></a>
+      <a id="redoOff" class="icon-spinner"></a></li>
+   </ul>
+   <form id="nxnSender">
+      <input type="hidden" id="nxnID" name="nxnID">
+      <input name="nxnAddress" type="email" id="nxnAddress" placeholder="Skriv inn din e-postadresse">
+      <input id="emailNxn" type="submit" value="&#xe008;">
+   </form>
+</div>
+<script src="js/jquery-1.7.2.min.js"></script>
+<script language='javascript'> 
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+var constraints = {
+	audio: false, 
+	video: {"mandatory": {
+		   "minWidth": "1280",
+		   "maxWidth": "1280",
+		   "minHeight": "720",
+		   "maxHeight": "720",
+		   "minFrameRate": "30"
+		  },
+		  "optional": []
+		 }
+}
+var video = document.querySelector("video");
+
+function successCallback(stream) {
+  window.stream = stream; // stream available to console
+  if (window.URL) {
+    video.src = window.URL.createObjectURL(stream);
+  } else {
+    video.src = stream;
+  }  
+ 
+  // initialise video
+  video.play();
+}
+
+function errorCallback(error){
+  console.log("navigator.getUserMedia error: ", error);
+}
+
+navigator.getUserMedia(constraints, successCallback, errorCallback);
+
+$("#capture").click(function() {
+	
+    var video = document.querySelector('video'); 
+    var canvas = document.getElementById('canvas');
+	var ctx = canvas.getContext('2d'); 
+
+	// set canvas size to video height
+    canvas.width = video.videoHeight;
+    canvas.height = video.videoHeight;
+
+    //create image to preload:
+    var imgPreload = new Image();
+    $(imgPreload).attr({
+        src: 'media/nixon-coffee-720.png'
+    });
+
+
+	$(imgPreload).load(function (response, status, xhr) {
+		if (status == 'error') {
+			// image could not be loaded:
+		} else {
+			// image loaded:
+			ctx.drawImage(video,-((video.videoWidth-video.videoHeight)/2),0,video.videoWidth,video.videoHeight);
+			ctx.globalAlpha = .95;
+			ctx.drawImage(imgPreload,0,0);	 
+			
+			// convert everything to grayscale
+			var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+			var data = imageData.data;
+
+			for(var i = 0; i < data.length; i += 4) {
+			  var brightness = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
+			  // red
+			  data[i] = brightness;
+			  // green
+			  data[i + 1] = brightness;
+			  // blue
+			  data[i + 2] = brightness;
+			}
+
+			// overwrite original image
+			ctx.globalAlpha = 1;
+			ctx.putImageData(imageData,0,0);
+		}
+	});	
+	
+	// effects
+	smile();
+	
+	// pause video
+	document.getElementById('video').pause();
+	
+	// switch from video to canvas
+	$('#videoWrapper').hide();
+	$('#canvas').show();
+		
+	// update controls
+	$('#capture').hide();
+	$('#confirm').show();				
+	$('#redo').show();								
+	$('#captureOff').show();
+	$('#confirmOff').hide();				
+	$('#redoOff').hide();											
+});
+
+// confirm
+$("#confirm").click(function() {
+	
+	// update controls
+	$('#confirm').hide();				
+	$('#redo').hide();								
+	$('#confirmOff').show();				
+	$('#redoOff').show();								
+	
+    // play buzzer    
+	document.getElementById('buzzer').play();	
+	
+	// send image to save page
+	nxnID = new Date().getTime();
+	var photo = document.getElementById('canvas').toDataURL("image/png");
+	var ajax = new XMLHttpRequest();
+	ajax.open('POST','save.php?nxnID=' + nxnID,false);
+	ajax.setRequestHeader('Content-Type', 'application/upload');
+	ajax.send('nxnID='+nxnID+'&'+photo);	
+
+	// update controls
+	$('#redo').show();								
+	$('#redoOff').hide();								
+	$('#nxnSender').show();
+	
+});
+
+// email handler
+function sendNixon() {
+	var url = "nixon-sender.php"; // the script where you handle the form input.	
+	$('#nxnID').val(nxnID);
+	$('#nxnAddress').val();
+
+	$.ajax({
+		   type: "POST",
+		   url: url,
+		   data: $("#nxnSender").serialize(),
+		   success: function(data)
+		   {
+			 resetBooth();
+		   }
+		 });	
+	return false;	
+}
+
+// email form submit
+$("#nxnSender").submit(function() {
+	sendNixon();
+	return false;
+});
+
+// new photo
+$("#redo").click(function() {
+	resetBooth();
+});
+
+// reset booth
+function resetBooth() {
+	 // clear canvas and start camera
+    var ctx = canvas.getContext('2d'); 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById('video').play();
+
+	// update controls
+	$('#capture').show();
+	$('#confirm').hide();				
+	$('#redo').hide();								
+	$('#captureOff').hide();
+	$('#confirmOff').show();				
+	$('#redoOff').show();								
+	$('#nxnSender').hide();
+	$('#nxnAddress').val("");
+	
+	// switch from canvas to video
+	$('#videoWrapper').show();
+	$('#canvas').hide();
+}
+
+
+// smile!
+function smile(){            
+	 $('#blitz')
+	 .show()
+	 .animate({opacity: 0.5}, 150) 
+	 .fadeOut(250)
+	 .css({'opacity': 1});
+
+     // play shutter sound    
+	 document.getElementById('shutter').play();
+}
+
+$(document).ready(function() {    
+	// update controls
+	$('#blitz').hide();
+	$('#canvas').hide();
+	$('#captureOff').hide();
+	$('#confirm').hide();				
+	$('#redo').hide();								
+	$('#nxnSender').hide();
+	
+	// disable touch actions on canvas/image
+	preventLongPressMenu(document.getElementById('videoOverlay'));
+});
+
+$('#fullscreenToggle').click(function() {
+    location.reload();
+});
+
+// stop event
+function absorbEvent_(event) {
+  var e = event || window.event;
+  e.preventDefault && e.preventDefault();
+  e.stopPropagation && e.stopPropagation();
+  e.cancelBubble = true;
+  e.returnValue = false;
+  return false;
+}
+
+// stop touch event
+function preventLongPressMenu(node) {
+  node.ontouchstart = absorbEvent_;
+  node.ontouchmove = absorbEvent_;
+  node.ontouchend = absorbEvent_;
+  node.ontouchcancel = absorbEvent_;
+}
+</script>  
+</body>
+</html>

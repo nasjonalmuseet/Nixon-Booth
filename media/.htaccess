@@ -1,0 +1,7 @@
+# Exempt audio from password protection to prevent extra login prompts
+<Files ~ "\.(mp4|m4v)>
+    AddType audio/mpeg mp3
+    order allow,deny
+    allow from all
+    satisfy any
+</Files>
