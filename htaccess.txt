@@ -1,7 +1,0 @@
-# WAFF BEGIN
-AuthUserFile "/home/u/u3708426/www/nxn/.htnxn"
-AuthGroupFile /dev/null
-AuthName "Nixon booth login"
-AuthType Basic
-require valid-user
-# WAFF END
